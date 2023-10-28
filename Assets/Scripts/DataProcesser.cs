@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class DataProcesser : MonoBehaviour
 {
+    public Vector3[] data_points;
     private void Awake()
     {
         string datapoint_txt = "Assets/Datafiles/newhoydedata.txt";
@@ -25,7 +26,7 @@ public class DataProcesser : MonoBehaviour
         {
             // read file
             int line_counter = int.Parse(file.ReadLine());
-            Vector3[] data_points = new Vector3[line_counter];
+            data_points = new Vector3[line_counter];
             int counter = 0;
             while (!file.EndOfStream)
             {
@@ -43,6 +44,8 @@ public class DataProcesser : MonoBehaviour
                 counter++;
             }
             Debug.Log("DataProcessor: ReadFile: if/else - while: the While statement is done and file-reading is done.");
+            //create an instance of QuadTree()
+            QuadTree quadTree = new QuadTree();
         }
         else
         {
