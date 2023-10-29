@@ -1,11 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.IO;
 using UnityEngine;
+using JetBrains.Annotations;
+using System;
 
 public class DataProcesser : MonoBehaviour
 {
-    public Vector3[] data_points;
+    public System.Numerics.Vector3[] data_points;
+    public System.Numerics.Vector3[] dp_processed;
+    public UnityEngine.Vector3[] dp_ready;
+    int line_counter;
+    int treeheight;
+
+    float minX;
+    float minZ;
+    float maxX;
+    float maxZ;
+
     private void Awake()
     {
         string datapoint_txt = "Assets/Datafiles/newhoydedata.txt";
@@ -18,6 +31,11 @@ public class DataProcesser : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        treeheight = GetComponent<UserInputScript>().Resolution;
+    }
+
     void ReadFile(string datapoint_path)
     {
         StreamReader file = new StreamReader(datapoint_path);
@@ -25,32 +43,87 @@ public class DataProcesser : MonoBehaviour
         if(file != null )
         {
             // read file
-            int line_counter = int.Parse(file.ReadLine());
-            data_points = new Vector3[line_counter];
+            line_counter = int.Parse(file.ReadLine());
+            data_points = new System.Numerics.Vector3[line_counter];
             int counter = 0;
             while (!file.EndOfStream)
             {
                 string temp_point_line = file.ReadLine();
                 string[] point_line = temp_point_line.Split(' ');
-                
-                Vector3 temp_v = new Vector3();
 
-                temp_v.x = float.Parse(point_line[0]);
-                temp_v.y = float.Parse(point_line[1]);
-                temp_v.z = float.Parse(point_line[2]);
+                System.Numerics.Vector3 temp_v = new System.Numerics.Vector3();
+
+                temp_v.X = float.Parse(point_line[0]);
+                temp_v.Z = float.Parse(point_line[1]);
+                temp_v.Y = float.Parse(point_line[2]);
 
                 data_points[counter] = temp_v;
 
                 counter++;
             }
             Debug.Log("DataProcessor: ReadFile: if/else - while: the While statement is done and file-reading is done.");
+            TranslatePoints();
             //create an instance of QuadTree()
-            QuadTree quadTree = new QuadTree();
+            QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
         }
         else
         {
             // there was a problem with StreamReader
             Debug.Log("DataProcessor:ReadFile: if/else - else: there is a problem with StreamReader");
         }
+    }
+
+    void TranslatePoints()
+    {
+        minX = float.MaxValue;
+        minZ = float.MaxValue;
+
+        maxX = float.MinValue;
+        maxZ = float.MinValue;
+
+        foreach(var point in data_points)
+        {
+            if (point.X < minX)
+                minX = point.X;
+            if (point.X > maxX)
+                maxX = point.X;
+            if (point.Z < minZ)
+                minZ = point.Y;
+            if (point.Z > maxZ)
+                maxZ = point.Z;
+        }
+
+
+
+        float newX = -minX;
+        float newY = -minZ;
+
+        System.Numerics.Matrix4x4 translationMatrix = System.Numerics.Matrix4x4.CreateTranslation(newX, newY, 0);
+
+        dp_processed = new System.Numerics.Vector3[line_counter];
+        int counter = 0;
+        foreach(var point in data_points)
+        {
+            System.Numerics.Vector3 temp = System.Numerics.Vector3.Transform(point, translationMatrix);
+            dp_processed[counter] = temp;
+            counter++;
+        }
+        Debug.Log("DataProcesser:TranslatePoints: after second foreach- points should now be translated");
+
+        Converter();
+    }
+
+    void Converter()
+    {
+        dp_ready = new UnityEngine.Vector3[line_counter];
+        int counter = 0;
+        foreach(var point in dp_processed)
+        {
+            dp_ready[counter].x = point.X;
+            dp_ready[counter].y = point.Y;
+            dp_ready[counter].z = point.Z;
+            counter++;
+        }
+        Debug.Log("DataProcesser:Converter:foreach is done. Every point should be ready to be inserted into Mesh.");
     }
 }
