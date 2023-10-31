@@ -27,6 +27,7 @@ public class DataProcesser : MonoBehaviour
         {
             //We can read files
             Debug.Log("DataProcessor:Awake: file exists");
+            // Start();
             ReadFile(datapoint_txt);
         }
     }
@@ -34,6 +35,7 @@ public class DataProcesser : MonoBehaviour
     private void Start()
     {
         treeheight = GetComponent<UserInputScript>().Resolution;
+        Debug.Log("DataProcesser:Start: treeheight imported resolution from UserInput class: " +  treeheight);
     }
 
     void ReadFile(string datapoint_path)
