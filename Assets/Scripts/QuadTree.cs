@@ -93,10 +93,10 @@ public class QuadTree
         // insert datapoints! (datapoints, rootNode)
         public void insertDatapoints(Vector3[] datapoints, int treeheight, QuadTree.Node currentNode)
         {
-            Debug.Log("QuadTree:Tree:insertDatapoints: treeheight: " + treeheight);
-            Debug.Log("QuadTree:Tree:insertDatapoints: currentNode height: " + currentNode.nodeHeight);
-            Debug.Log("QuadTree:Tree:insertDatapoints: currentchild height: " + currentNode.childrenNodes[0].nodeHeight);
-            Debug.Log("QuadTree:Tree:insertDatapoints: currentgrandchild height: " + currentNode.childrenNodes[0].childrenNodes[0].nodeHeight); 
+            // Debug.Log("QuadTree:Tree:insertDatapoints: treeheight: " + treeheight);
+            // Debug.Log("QuadTree:Tree:insertDatapoints: currentNode height: " + currentNode.nodeHeight);
+            // Debug.Log("QuadTree:Tree:insertDatapoints: currentchild height: " + currentNode.childrenNodes[0].nodeHeight);
+            // Debug.Log("QuadTree:Tree:insertDatapoints: currentgrandchild height: " + currentNode.childrenNodes[0].childrenNodes[0].nodeHeight); 
             if (currentNode.nodeHeight == treeheight)
             {
                 Debug.Log("QuadTree:Tree:insertDatapoints: current node is at the bottom of tree and point is being inserted in thedatalist");
@@ -108,7 +108,7 @@ public class QuadTree
                 Debug.Log("QuadTree:Tree:insertDatapoints: we've entered foreach");
                 foreach (var point in datapoints)
                 {
-                    Debug.Log("point: " + point);
+                    // Debug.Log("point: " + point);
                     /*Debug.Log("QuadTree:Tree:insertDatapoints: point.x = " + point.x);
                     Debug.Log("QuadTree:Tree:insertDatapoints: xmin = " + currentNode.xmin);
                     Debug.Log("QuadTree:Tree:insertDatapoints: xmax = " + currentNode.xmax);

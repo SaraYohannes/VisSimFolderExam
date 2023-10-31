@@ -11,6 +11,7 @@ public class DataProcesser : MonoBehaviour
     public System.Numerics.Vector3[] data_points;
     public System.Numerics.Vector3[] dp_processed;
     public UnityEngine.Vector3[] dp_ready;
+    [SerializeField] public GameObject pointPrefab;
     int line_counter;
     int treeheight;
 
@@ -66,7 +67,9 @@ public class DataProcesser : MonoBehaviour
             Debug.Log("DataProcessor: ReadFile: if/else - while: the While statement is done and file-reading is done.");
             TranslatePoints();
             //create an instance of QuadTree()
-            QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
+            Debug.Log("DataProcessor: ReadFile: Quad tree is disabled for now. Comment out this message when using QuadTree");
+            // QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
+            showPoints();
         }
         else
         {
@@ -74,7 +77,17 @@ public class DataProcesser : MonoBehaviour
             Debug.Log("DataProcessor:ReadFile: if/else - else: there is a problem with StreamReader");
         }
     }
-
+    void showPoints()
+    {
+        int length = (dp_ready.Length / 10000);
+        float scale = 0.8f;
+        // use pointPrefab
+        for (int i = 0;  i < length; i++)
+        {
+            UnityEngine.Vector3 scaledpos = dp_ready[i] * scale;
+            Instantiate(pointPrefab, scaledpos, UnityEngine.Quaternion.identity);
+        }
+    }
     void TranslatePoints()
     {
         minX = float.MaxValue;
