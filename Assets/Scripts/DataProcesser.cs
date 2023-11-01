@@ -15,10 +15,7 @@ public class DataProcesser : MonoBehaviour
     int line_counter;
     int treeheight;
 
-    float minX;
-    float minZ;
-    float maxX;
-    float maxZ;
+    float minX, minY, minZ, maxX, maxY, maxZ;
 
     private void Awake()
     {
@@ -79,7 +76,7 @@ public class DataProcesser : MonoBehaviour
     }
     void showPoints()
     {
-        int length = (dp_ready.Length / 10000);
+        int length = (dp_ready.Length / 1000);
         float scale = 0.8f;
         // use pointPrefab
         for (int i = 0;  i < length; i++)
@@ -91,9 +88,11 @@ public class DataProcesser : MonoBehaviour
     void TranslatePoints()
     {
         minX = float.MaxValue;
+        minY = float.MaxValue;
         minZ = float.MaxValue;
 
         maxX = float.MinValue;
+        maxY = float.MinValue;
         maxZ = float.MinValue;
 
         foreach(var point in data_points)
@@ -102,8 +101,14 @@ public class DataProcesser : MonoBehaviour
                 minX = point.X;
             if (point.X > maxX)
                 maxX = point.X;
+
+            if (point.Y < minY)
+                minY = point.Y;
+            if (point.Y > maxY)
+                maxY = point.Y;
+
             if (point.Z < minZ)
-                minZ = point.Y;
+                minZ = point.Z;
             if (point.Z > maxZ)
                 maxZ = point.Z;
         }
@@ -111,9 +116,10 @@ public class DataProcesser : MonoBehaviour
 
 
         float newX = -minX;
-        float newY = -minZ;
+        float newY = -minY;
+        float newZ = -minZ;
 
-        System.Numerics.Matrix4x4 translationMatrix = System.Numerics.Matrix4x4.CreateTranslation(newX, newY, 0);
+        System.Numerics.Matrix4x4 translationMatrix = System.Numerics.Matrix4x4.CreateTranslation(newX, newY, newZ);
 
         dp_processed = new System.Numerics.Vector3[line_counter];
         int counter = 0;
