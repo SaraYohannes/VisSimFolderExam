@@ -21,12 +21,12 @@ public class DataProcesser : MonoBehaviour
     {
         string datapoint_txt = "Assets/Datafiles/newhoydedata.txt";
 
-        if(File.Exists(datapoint_txt))
+        if(File.Exists(datapoint_txt)) //TODO: move this to Start function-> we don't want this to run before Start
         {
             //We can read files
             Debug.Log("DataProcessor:Awake: file exists");
             // Start();
-            ReadFile(datapoint_txt);
+            ReadFile(datapoint_txt); 
         }
     }
 
@@ -34,6 +34,7 @@ public class DataProcesser : MonoBehaviour
     {
         treeheight = GetComponent<UserInputScript>().Resolution;
         Debug.Log("DataProcesser:Start: treeheight imported resolution from UserInput class: " +  treeheight);
+        // TODO: check for file.exists here and exit program if the file does not exist
     }
 
     void ReadFile(string datapoint_path)
@@ -64,8 +65,8 @@ public class DataProcesser : MonoBehaviour
             Debug.Log("DataProcessor: ReadFile: if/else - while: the While statement is done and file-reading is done.");
             TranslatePoints();
             //create an instance of QuadTree()
-            Debug.Log("DataProcessor: ReadFile: Quad tree is disabled for now. Comment out this message when using QuadTree");
-            // QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
+            // Debug.Log("DataProcessor: ReadFile: Quad tree is disabled for now. Comment out this message when using QuadTree");
+            QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
             showPoints();
         }
         else
@@ -74,7 +75,7 @@ public class DataProcesser : MonoBehaviour
             Debug.Log("DataProcessor:ReadFile: if/else - else: there is a problem with StreamReader");
         }
     }
-    void showPoints()
+    void showPoints() // TODO: this is only necessary for COMP 3, and shouldn't be called in exam delivery
     {
         int length = (dp_ready.Length / 1000);
         float scale = 0.8f;
@@ -112,8 +113,6 @@ public class DataProcesser : MonoBehaviour
             if (point.Z > maxZ)
                 maxZ = point.Z;
         }
-
-
 
         float newX = -minX;
         float newY = -minY;
