@@ -76,7 +76,7 @@ public class QuadTree
             rootNode = new QuadTree.Node(minX, maxX, minZ, maxZ, nodeheight);
             treeheight = 2;
             insertNodes(nodeheight, treeheight, minX, maxX, minZ, maxZ, rootNode);
-            Debug.Log("QuadTree:Tree:Tree: Tree was just successfully finished!");
+            // Debug.Log("QuadTree:Tree:Tree: Tree was just successfully finished!");
             Debug.Log("QuadTree:Tree:Tree: We have " + nodeCounterBecauseIneedThis + " nodes in the tree");
             // insert datapoints!
             Debug.Log("QuadTree.Tree.Tree: insertDatapoints is being called");
@@ -84,53 +84,76 @@ public class QuadTree
         }
         public QuadTree.Node traversal(Vector3 point, int treeheight, QuadTree.Node currentNode)
         {
+            // Debug.Log(11111);
             if (currentNode == null)
                 return null;
-
+            
             if (currentNode.nodeHeight == treeheight) // pointdata fits here?
+            {
                 if (currentNode.childrenNodes[0] == null) // not necessary?
                 {
                     return currentNode;
                 }
+                Debug.Log(5);
+            }
             else
+            {
+                if (currentNode.childrenNodes[0] != null) // not necessary?
                 {
-                    if (currentNode.childrenNodes[0] != null) // not necessary?
-                    {
-                        int correctChild = childQuadrant(point, currentNode); //TODO: we don't have the pointdata. Need it to figure out which child to go to DONE?
-                        traversal(point, treeheight, currentNode.childrenNodes[correctChild]);
-                    }
+                    int correctChild = childQuadrant(point, currentNode); //TODO: we don't have the pointdata. Need it to figure out which child to go to DONE?
+                    traversal(point, treeheight, currentNode.childrenNodes[correctChild]);
                 }
+            }
 
             return currentNode;
         }
         // insert datapoints! (datapoints, rootNode)
         public void insertDatapoints(Vector3[] datapoints, int treeheight, QuadTree.Node currentNode)
         {
+            int counter = 0;
+            int counter2 = 0;
+            int counter3 = 0;
+            int counter4 = 0;
             List<Node> validNode = new List<Node>();
+            Debug.Log("QuadTree.Tree.Tree: insertDatapoints: List validNode was made");
             foreach (var point in datapoints)
             {
+                counter++;
+                if (counter == 101)
+                {
+                    break;
+                }
                 // traverse tree to find correct node
                 rootNode = traversal(point, treeheight, currentNode);
                 if (rootNode == null)
                 {
+                    counter3++;
                     continue; //s-s-skippp!
                 }
                 // insert data into node
                 rootNode.datapoint.Add(point);
                 // change information in node
+                Debug.Log("Is it true or not? " + rootNode.b_emptyList);
                 if (rootNode.b_emptyList)
                 {
+                    counter2++;
                     rootNode.b_emptyList = false;
                 }
                 // check if node is in list, if not add
                 if (!rootNode.b_emptyList && validNode.Contains(rootNode))
                 {
+                    counter4++;
                     validNode.Add(rootNode);
                 }
             }
+            Debug.Log("QuadTree.Tree.Tree: insertDatapoints: foreach point in datapoints is done " + counter);
+            Debug.Log("QuadTree.Tree.Tree: insertDatapoints: there was a rootNode this many times " + counter3);
+            Debug.Log("QuadTree.Tree.Tree: insertDatapoints: we had this many nodes change from true to false " + counter2);
+            Debug.Log("QuadTree.Tree.Tree: insertDatapoints: we had this many valid nodes in the validNode list " + counter4);
 
             foreach (var node in validNode)
             {
+                Debug.Log("QuadTree.Tree.Tree: insertDatapoints: foreach validNode find height");
                 // get the height and rep point of this node
                 node.yHeight();
                 
@@ -139,7 +162,11 @@ public class QuadTree
                 // keep track of how many triangles
                 // add to the file at the very end, pre-append (i think? how many lines there are in file
             }
-           
+            Debug.Log("QuadTree.Tree.Tree: insertDatapoints: foreach node in ValidNode has a height");
+            foreach (var node in validNode)
+            {
+                Debug.Log("RepPoint in node has height: " + node.rep_point);
+            }
         }
         // which quadrant??
         private int childQuadrant(Vector3 point, QuadTree.Node currentNode)
@@ -192,14 +219,14 @@ public class QuadTree
             // Make root node if it isn't made yet
             if (root == null)
             {
-                Debug.Log("QuadTree:Tree:insertNodes: root node will be made.");
+                // Debug.Log("QuadTree:Tree:insertNodes: root node will be made.");
                 root = new QuadTree.Node(minX, maxX, minZ, maxZ, nodeheight);
             }
 
             // If this node is the height of the tree, then stop
             if (treeheight == nodeheight)
             {
-                Debug.Log("QuadTree:Tree:insertNodes: tree will be finished");
+                // Debug.Log("QuadTree:Tree:insertNodes: tree will be finished");
                 return root;
             }
 

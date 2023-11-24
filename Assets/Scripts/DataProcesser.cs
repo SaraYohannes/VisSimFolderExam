@@ -67,7 +67,7 @@ public class DataProcesser : MonoBehaviour
             //create an instance of QuadTree()
             // Debug.Log("DataProcessor: ReadFile: Quad tree is disabled for now. Comment out this message when using QuadTree");
             QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
-            showPoints();
+            // showPoints();
         }
         else
         {
