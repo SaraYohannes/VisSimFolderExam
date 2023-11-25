@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class GizzyTestingSpace : MonoBehaviour
 {
-    [SerializeField] public QuadTree.Node rootNode;
+    public QuadTree.Node rootNode;
 
     // Start is called before the first frame update
     void Start()
     {
         
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (rootNode != null)
+        {
+           OnDrawGizmos();
+        }
+        else
+        {
+            Debug.Log("GizzyTesting: the object reference was null");
+            return;
+        }
     }
 
     void OnDrawGizmos()

@@ -69,7 +69,7 @@ public class QuadTree
     public class Tree
     {
         GameObject cube = UnityEngine.GameObject.CreatePrimitive(PrimitiveType.Cube);
-        private QuadTree.Node rootNode;
+        public QuadTree.Node rootNode;
         public Tree() 
         { 
             rootNode = null;        
