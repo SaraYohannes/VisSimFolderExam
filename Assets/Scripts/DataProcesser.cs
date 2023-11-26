@@ -55,7 +55,7 @@ public class DataProcesser : MonoBehaviour
                 counter++;
             }
             TranslatePoints();
-            showPoints();
+            //showPoints();
         }
         else
         {
