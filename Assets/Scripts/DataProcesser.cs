@@ -13,11 +13,11 @@ public class DataProcesser : MonoBehaviour
     public UnityEngine.Vector3[] dp_ready;
     [SerializeField] public GameObject pointPrefab;
     int line_counter;
-    float minX, minY, minZ, maxX, maxY, maxZ;
+    public float minX, minY, minZ, maxX, maxY, maxZ;
 
     private void Start()
     {
-        string datapoint_txt = "Assets/Datafiles/newhoydedata.txt";
+        string datapoint_txt = "Assets/Datafiles/smallhoydedata.txt";
         
         if(File.Exists(datapoint_txt)) 
         {
@@ -63,20 +63,22 @@ public class DataProcesser : MonoBehaviour
             Debug.Log("DataProcessor:ReadFile: if/else - else: there is a problem with StreamReader");
         }
     }
-    void showPoints() // THIS HAS BEEN CHANGED TO FIT ONE OF THE TASKS FOR THE EXAM
-    {
-        float scale = 0.8f;
-        int counter = 0;
-        for (int i = 0;  i < dp_ready.Length; i++)
-        {
-            counter++;
-            if (counter % 1000 == 0)
-            {
-                UnityEngine.Vector3 scaledpos = dp_ready[i] * scale;
-                Instantiate(pointPrefab, scaledpos, UnityEngine.Quaternion.identity);                
-            }
-        }
-    }
+
+    //void showPoints() // THIS HAS BEEN CHANGED TO FIT ONE OF THE TASKS FOR THE EXAM
+    //{
+    //    float scale = 0.8f;
+    //    int counter = 0;
+    //    for (int i = 0;  i < dp_ready.Length; i++)
+    //    {
+    //        counter++;
+    //        if (counter % 1000 == 0)
+    //        {
+    //            UnityEngine.Vector3 scaledpos = dp_ready[i] * scale;
+    //            Instantiate(pointPrefab, scaledpos, UnityEngine.Quaternion.identity);                
+    //        }
+    //    }
+    //}
+
     void TranslatePoints()
     {
         minX = float.MaxValue;
@@ -113,10 +115,11 @@ public class DataProcesser : MonoBehaviour
 
         dp_processed = new System.Numerics.Vector3[line_counter];
         int counter = 0;
+        float scale = 0.5f;
         foreach(var point in data_points)
         {
             System.Numerics.Vector3 temp = System.Numerics.Vector3.Transform(point, translationMatrix);
-            dp_processed[counter] = temp;
+            dp_processed[counter] = temp * scale;
             counter++;
         }
         Converter();

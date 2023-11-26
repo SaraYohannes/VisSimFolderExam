@@ -8,8 +8,8 @@ public class MeshMaker : MonoBehaviour
     Mesh mesh;
     MeshFilter filter;
     Vector3[] dp_ready;
-    int resolution = 10;
-    float minX, minY, minZ, maxX, maxY, maxZ;
+    int resolution = 20;
+    public float minX, minY, minZ, maxX, maxY, maxZ;
 
     private void Awake()
     {
@@ -20,9 +20,10 @@ public class MeshMaker : MonoBehaviour
     private void Start()
     {
         dp_ready = GetComponent<DataProcesser>().dp_ready;
+
         if (dp_ready != null)
         {
-            // getBoarder();
+            getBoarder();
             makeRegularTriangulation();
         }
         else
@@ -60,9 +61,10 @@ public class MeshMaker : MonoBehaviour
     }
     void makeRegularTriangulation()
     {
-        int xAxisStep = (100)/resolution;
-        int zAxisStep = (100)/resolution;
+        float xAxisStep = (200) / resolution;
+        float zAxisStep = (200) / resolution;
 
+        // Debug.Log("dp_ready.length is = " + dp_ready.Length);
         List<Vector3> regular_triangulation = new List<Vector3>((resolution + 1) * (resolution + 1));
         int counter = 0;
         for (int i = 0; i < resolution + 1; i++)
@@ -75,9 +77,14 @@ public class MeshMaker : MonoBehaviour
                 counter++;
             }
         }
-        // Debug.Log("There should be " + counter + " points (Vector3s) in regularTriangulation list");
 
-
+/*
+        for (int i = 0; i < 20; i++)
+        {
+            Vector3 randomElement = GetRandomElement(regular_triangulation);
+            Debug.Log("Random Element from Regular triangulation list nr " +i+" : " + randomElement);
+        }
+*/
         List<int>T_list = new List<int>();
 
         for (int row = 0; row < resolution; row++)
@@ -97,12 +104,18 @@ public class MeshMaker : MonoBehaviour
         }
         AssignMesh(regular_triangulation, T_list);
     }
+
+    Vector3 GetRandomElement(List<Vector3> list)
+    {
+        int randomIndex = Random.Range(0, list.Count);
+        return list[randomIndex];
+    }
+
     void AssignMesh(List<Vector3>vert, List<int>triangles)
     {
         mesh.Clear();
         mesh.vertices = vert.ToArray();
         mesh.triangles = triangles.ToArray();
-        //mesh.RecalculateNormals();
         Debug.Log("Reached the end of AssignMesh");
     }
 }
