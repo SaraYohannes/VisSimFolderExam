@@ -13,30 +13,22 @@ public class DataProcesser : MonoBehaviour
     public UnityEngine.Vector3[] dp_ready;
     [SerializeField] public GameObject pointPrefab;
     int line_counter;
-    int treeheight;
-
     float minX, minY, minZ, maxX, maxY, maxZ;
-
-    private void Awake()
-    {
-        string datapoint_txt = "Assets/Datafiles/newhoydedata.txt";
-
-        if(File.Exists(datapoint_txt)) //TODO: move this to Start function-> we don't want this to run before Start
-        {
-            //We can read files
-            Debug.Log("DataProcessor:Awake: file exists");
-            // Start();
-            ReadFile(datapoint_txt); 
-        }
-    }
 
     private void Start()
     {
-        treeheight = GetComponent<UserInputScript>().Resolution;
-        Debug.Log("DataProcesser:Start: treeheight imported resolution from UserInput class: " +  treeheight);
-        // TODO: check for file.exists here and exit program if the file does not exist
+        string datapoint_txt = "Assets/Datafiles/newhoydedata.txt";
+        
+        if(File.Exists(datapoint_txt)) 
+        {
+            //We can read files
+            ReadFile(datapoint_txt); 
+        }
+        else
+        {
+            Debug.Log("DataProcessor:Start: file does not exist");
+        }
     }
-
     void ReadFile(string datapoint_path)
     {
         StreamReader file = new StreamReader(datapoint_path);
@@ -62,11 +54,7 @@ public class DataProcesser : MonoBehaviour
 
                 counter++;
             }
-            Debug.Log("DataProcessor: ReadFile: if/else - while: the While statement is done and file-reading is done.");
             TranslatePoints();
-            //create an instance of QuadTree()
-            // Debug.Log("DataProcessor: ReadFile: Quad tree is disabled for now. Comment out this message when using QuadTree");
-            // QuadTree.Tree quadTree = new QuadTree.Tree(dp_ready, treeheight, minX, maxX, minZ, maxZ);
             showPoints();
         }
         else
@@ -75,15 +63,18 @@ public class DataProcesser : MonoBehaviour
             Debug.Log("DataProcessor:ReadFile: if/else - else: there is a problem with StreamReader");
         }
     }
-    void showPoints() // TODO: this is only necessary for COMP 3, and shouldn't be called in exam delivery
+    void showPoints() // THIS HAS BEEN CHANGED TO FIT ONE OF THE TASKS FOR THE EXAM
     {
-        int length = (dp_ready.Length / 1000);
         float scale = 0.8f;
-        // use pointPrefab
-        for (int i = 0;  i < length; i++)
+        int counter = 0;
+        for (int i = 0;  i < dp_ready.Length; i++)
         {
-            UnityEngine.Vector3 scaledpos = dp_ready[i] * scale;
-            Instantiate(pointPrefab, scaledpos, UnityEngine.Quaternion.identity);
+            counter++;
+            if (counter % 1000 == 0)
+            {
+                UnityEngine.Vector3 scaledpos = dp_ready[i] * scale;
+                Instantiate(pointPrefab, scaledpos, UnityEngine.Quaternion.identity);                
+            }
         }
     }
     void TranslatePoints()
@@ -128,11 +119,8 @@ public class DataProcesser : MonoBehaviour
             dp_processed[counter] = temp;
             counter++;
         }
-        Debug.Log("DataProcesser:TranslatePoints: after second foreach- points should now be translated");
-
         Converter();
     }
-
     void Converter()
     {
         dp_ready = new UnityEngine.Vector3[line_counter];
@@ -144,6 +132,5 @@ public class DataProcesser : MonoBehaviour
             dp_ready[counter].z = point.Z;
             counter++;
         }
-        Debug.Log("DataProcesser:Converter:foreach is done. Every point should be ready to be inserted into Mesh.");
     }
 }
