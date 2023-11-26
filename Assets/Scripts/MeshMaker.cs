@@ -7,6 +7,8 @@ public class MeshMaker : MonoBehaviour
 {
     Mesh mesh;
     MeshFilter filter;
+    public List<Vector3> regular_triangulation;
+    public List<int> T_list;
     Vector3[] dp_ready;
     int resolution = 20;
     public float minX, minY, minZ, maxX, maxY, maxZ;
@@ -65,7 +67,7 @@ public class MeshMaker : MonoBehaviour
         float zAxisStep = (200) / resolution;
 
         // Debug.Log("dp_ready.length is = " + dp_ready.Length);
-        List<Vector3> regular_triangulation = new List<Vector3>((resolution + 1) * (resolution + 1));
+        regular_triangulation = new List<Vector3>((resolution + 1) * (resolution + 1));
         int counter = 0;
         for (int i = 0; i < resolution + 1; i++)
         {
@@ -85,7 +87,7 @@ public class MeshMaker : MonoBehaviour
             Debug.Log("Random Element from Regular triangulation list nr " +i+" : " + randomElement);
         }
 */
-        List<int>T_list = new List<int>();
+        T_list = new List<int>();
 
         for (int row = 0; row < resolution; row++)
         {
