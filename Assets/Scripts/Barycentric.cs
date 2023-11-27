@@ -12,27 +12,40 @@ public class Barycentric : MonoBehaviour
      */
 
     [SerializeField] public MeshMaker MeshInfo;
-    public Transform SphereInfo;
+    [SerializeField] public MeshFilter MeshFilter; // USE
+    [SerializeField] public Transform SphereInfo; //USE
     //[SerializeField] public Transform tester_gizmo;
     List<Vector3> _meshinfo;
-    Vector3[] meshinfo;
+    Vector3[] meshinfo; // USE
     List<int> _indexinfo;
-    int[] indexinfo;
-    public int currentTriangle;
+    int[] indexinfo; // USE
+    [SerializeField] private int currentTriangle;
     public Vector3 AB;
     public Vector3 AC;
+    Vector3 sphere_vec;
 
     private void Start()
     {
         // Vector3 array with vertex information about the mesh
-        _meshinfo = MeshInfo.GetComponent<MeshMaker>().regular_triangulation;
-        _indexinfo = MeshInfo.GetComponent<MeshMaker>().T_list;
+        //_meshinfo = MeshInfo.GetComponent<MeshMaker>().regular_triangulation;
+        //_indexinfo = MeshInfo.GetComponent<MeshMaker>().T_list;
         // GameObject with all information about the sphere
-        SphereInfo = GetComponent<Transform>();
+        
+        // SphereInfo = GetComponent<Transform>(); // DONT NEED THIS WHEN SERIALIZED
+        
         // Gizmo to track barycooridinates
         // tester_gizmo = tester_gizmo.GetComponent<Transform>();
-        Converter();
-
+        //Converter();
+        if (MeshFilter != null ) // FOR TESTING
+        {
+            meshinfo = MeshFilter.sharedMesh.vertices;
+            indexinfo = MeshFilter.sharedMesh.triangles;
+        }
+        else
+        {
+            Debug.Log("Barycentric: Start: MeshFilter is null");
+            return;
+        }
     }
     private void Converter()
     {
@@ -54,10 +67,11 @@ public class Barycentric : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 sphere_vec = SphereInfo.transform.position;
         // Debug.Log(sphere_vec);
+        sphere_vec = SphereInfo.transform.position;
         Vector3 currentLocaton = baryCentricPosition(meshinfo, sphere_vec);
-        // Debug.Log(currentLocaton);
+        Debug.Log("The currentLocation is: " + currentLocaton);
+        Debug.Log("The sphere position is: " + sphere_vec);
         // tester_gizmo.transform.position = currentLocaton;
     }
 
@@ -82,7 +96,7 @@ public class Barycentric : MonoBehaviour
                 AB = p2 - p1;
                 AC = p3 - p1;
                 Vector3 n = Vector3.Cross(AB, AC);
-                // Debug.Log("Normal fra bary AB;AC: " + n);
+                Debug.Log("Normal fra bary AB;AC: " + n);
                 break;
             }
         }
@@ -132,7 +146,7 @@ public class Barycentric : MonoBehaviour
         Vector2 v1 = p3 - p1;
         Vector2 v2 = vec2sphere - p1;
 
-        Debug.Log("Barry: GetBaryC v0: " + v0 + " v1: " + v1 + " v2: " + v2);
+        //Debug.Log("Barry: GetBaryC v0: " + v0 + " v1: " + v1 + " v2: " + v2);
 
         float d00 = Vector2.Dot(v0, v0);
         float d01 = Vector2.Dot(v0, v1);
@@ -141,7 +155,7 @@ public class Barycentric : MonoBehaviour
         float d21 = Vector2.Dot(v2, v1);
         float denom = d00 * d11 - d01 * d01;
 
-        Debug.Log("Barry: GetBaryC denom: " + denom);
+        //Debug.Log("Barry: GetBaryC denom: " + denom);
 
         float v = (d11 * d20 - d01 * d21) / denom;
         float w = (d00 * d21 - d01 * d20) / denom;
