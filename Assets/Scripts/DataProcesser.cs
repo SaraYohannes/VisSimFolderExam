@@ -69,17 +69,13 @@ public class DataProcesser : MonoBehaviour
     void showPoints() // THIS HAS BEEN CHANGED TO FIT ONE OF THE TASKS FOR THE EXAM
     {
         mesh_vert = new List<UnityEngine.Vector3>();
-        // int counter = 0;
-        // Debug.Log("length of dp_ready: " + dp_ready.Length);
+
         for (int i = 0; i < dp_ready.Length; i += 1000)
         {
             mesh_vert.Add(dp_ready[i]);
         }
-        // Debug.Log("length of mesh_vert: " + mesh_vert.Count);
         for (int i = 0; i < mesh_vert.Count; i++)
         {
-            // UnityEngine.Vector3 scaledpos = mesh_vert[i]; // * scale;
-            
             Instantiate(pointPrefab, mesh_vert[i], UnityEngine.Quaternion.identity);
         }
     }
@@ -153,7 +149,7 @@ public class DataProcesser : MonoBehaviour
 
             //if (temp.Z <= wall)
             //{
-                dp_processed[counter] = temp;
+            dp_processed[counter] = temp;
                 // checkers++;
             //}
             //else if (counter == 1)
