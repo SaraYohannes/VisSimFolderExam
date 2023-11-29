@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8560990024067997518}
   - component: {fileID: 4524102328357482278}
   - component: {fileID: 1330510398336272135}
+  - component: {fileID: -9187352086257239128}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -118,9 +119,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a090f598157833c438dfd408dfa448da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MeshInfo: {fileID: 0}
-  SphereInfo: {fileID: 0}
-  tester_gizmo: {fileID: 0}
+  plane: {fileID: 4790032240594756362, guid: e019bbc56c4aa204990568b9c0afdb63, type: 3}
+  MeshFilter: {fileID: 6187057213835274115, guid: e019bbc56c4aa204990568b9c0afdb63,
+    type: 3}
+  SphereInfo: {fileID: 7808631929224914034}
   currentTriangle: 0
-  AB: {x: 0, y: 0, z: 0}
-  AC: {x: 0, y: 0, z: 0}
+  ballPos: {x: 0, y: 0, z: 0}
+  triangleNr: 0
+  TriangleNormal: {x: 0, y: 0, z: 0}
+--- !u!114 &-9187352086257239128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9121216514601525781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e005518c3f76d90489a28e8745174c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity: 9.81
+  mass: 1
+  surfaceNormal: {x: 0, y: 0, z: 0}

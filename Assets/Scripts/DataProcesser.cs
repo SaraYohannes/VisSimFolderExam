@@ -5,15 +5,17 @@ using System.IO;
 using UnityEngine;
 using JetBrains.Annotations;
 using System;
+using System.Drawing;
 
 public class DataProcesser : MonoBehaviour
 {
-    public System.Numerics.Vector3[] data_points;
-    public System.Numerics.Vector3[] dp_processed;
-    public UnityEngine.Vector3[] dp_ready;
     [SerializeField] public GameObject pointPrefab;
+    System.Numerics.Vector3[] data_points;
+    System.Numerics.Vector3[] dp_processed;
+    UnityEngine.Vector3[] dp_ready;
+    public List<UnityEngine.Vector3> mesh_vert;
     int line_counter;
-    public float minX, minY, minZ, maxX, maxY, maxZ;
+    float minX, minY, minZ, maxX, maxY, maxZ;
 
     private void Start()
     {
@@ -55,7 +57,7 @@ public class DataProcesser : MonoBehaviour
                 counter++;
             }
             TranslatePoints();
-            //showPoints();
+            showPoints();
         }
         else
         {
@@ -64,20 +66,23 @@ public class DataProcesser : MonoBehaviour
         }
     }
 
-    //void showPoints() // THIS HAS BEEN CHANGED TO FIT ONE OF THE TASKS FOR THE EXAM
-    //{
-    //    float scale = 0.8f;
-    //    int counter = 0;
-    //    for (int i = 0;  i < dp_ready.Length; i++)
-    //    {
-    //        counter++;
-    //        if (counter % 1000 == 0)
-    //        {
-    //            UnityEngine.Vector3 scaledpos = dp_ready[i] * scale;
-    //            Instantiate(pointPrefab, scaledpos, UnityEngine.Quaternion.identity);                
-    //        }
-    //    }
-    //}
+    void showPoints() // THIS HAS BEEN CHANGED TO FIT ONE OF THE TASKS FOR THE EXAM
+    {
+        mesh_vert = new List<UnityEngine.Vector3>();
+        // int counter = 0;
+        // Debug.Log("length of dp_ready: " + dp_ready.Length);
+        for (int i = 0; i < dp_ready.Length; i += 1000)
+        {
+            mesh_vert.Add(dp_ready[i]);
+        }
+        // Debug.Log("length of mesh_vert: " + mesh_vert.Count);
+        for (int i = 0; i < mesh_vert.Count; i++)
+        {
+            // UnityEngine.Vector3 scaledpos = mesh_vert[i]; // * scale;
+            
+            Instantiate(pointPrefab, mesh_vert[i], UnityEngine.Quaternion.identity);
+        }
+    }
 
     void TranslatePoints()
     {
@@ -111,17 +116,62 @@ public class DataProcesser : MonoBehaviour
         float newY = -minY;
         float newZ = -minZ;
 
+        // Debug.Log("DataProcessor: maxX: " + maxX + " | maxZ: " + maxZ);
+
         System.Numerics.Matrix4x4 translationMatrix = System.Numerics.Matrix4x4.CreateTranslation(newX, newY, newZ);
 
         dp_processed = new System.Numerics.Vector3[line_counter];
         int counter = 0;
-        float scale = 0.5f;
-        foreach(var point in data_points)
+        // int secCount = 0;
+        float scale = 0.001f;
+        // int checkers = 0; 
+        System.Numerics.Vector3 temp;
+        float wall = maxX * scale;
+        // Debug.Log("Wall is this high: " + wall);
+        
+        /*
+        foreach (var item in data_points)
         {
-            System.Numerics.Vector3 temp = System.Numerics.Vector3.Transform(point, translationMatrix);
-            dp_processed[counter] = temp * scale;
+            temp = System.Numerics.Vector3.Transform(item, translationMatrix);
+            temp = temp * scale;
+            if (item.X < wall)
+            {
+                counter++;
+            }
+            else
+            {
+                secCount++;
+            }
+            checkers++;
+        }*/
+
+        
+        foreach (var point in data_points)
+        {
+            temp = System.Numerics.Vector3.Transform(point, translationMatrix);
+            temp = temp*scale;
+
+            //if (temp.Z <= wall)
+            //{
+                dp_processed[counter] = temp;
+                // checkers++;
+            //}
+            //else if (counter == 1)
+            //{
+                //Debug.Log("the second point in data_point is this: " + point);
+            //}            
             counter++;
         }
+        
+
+        // Debug.Log("Checking the damn values: minX: " + minX + " | maxX: " + maxX + " | minZ: " + minZ + " | maxZ: " + maxZ);
+        // Debug.Log("Scaled, this is: " + (minX * scale) + " | " + (maxX * scale) + " | " + (minZ * scale) + " | " + (maxZ * scale));
+        // Debug.Log("Counter reached: " + counter);
+        // Debug.Log("Second counter reached: " + secCount);
+        // Debug.Log("Checkers reached: " + checkers);
+        // float debugmessg = maxX * scale;
+        // Debug.Log("DataProcessor: maxX*scale = " + debugmessg + " | counter: " + counter + " | checkers: " + checkers);
+
         Converter();
     }
     void Converter()
