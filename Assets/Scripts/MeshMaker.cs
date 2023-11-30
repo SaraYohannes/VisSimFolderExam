@@ -81,6 +81,7 @@ public class MeshMaker : MonoBehaviour
 
         Debug.Log("maxX value is: " + maxX + " | maxZ value is: " + maxZ);
         Debug.Log("xAxisStep: " + xAxisStep + " | zAxisStep: " + zAxisStep);
+        
         /*
         foreach (Vector3 p in dp_ready)
         {

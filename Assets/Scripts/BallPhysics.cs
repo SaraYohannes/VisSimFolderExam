@@ -18,7 +18,7 @@ public class BallPhysics : MonoBehaviour
         float totalForce = getTotalForce();
         float a = totalForce / mass;
 
-        velocity += velocity;
+        velocity += velocity * gravity;
         return velocity;
     }
     float getTotalForce()
